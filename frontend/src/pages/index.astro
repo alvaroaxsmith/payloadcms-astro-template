@@ -15,7 +15,9 @@ const posts = data.docs;
 				<Card
 					href={`/posts/${post.slug}`}
 					title={post.title || "Untitled"}
-					body={"Lorem ipsum dolor sit amet, consectetur adipiscing elit."}
+					body={post.description || "No description"}
+					author={post.author || "Unknown"}
+					date={post.createdAt || "Unknown"}
 				/>
 			))
 		}

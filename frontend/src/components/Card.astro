@@ -1,11 +1,15 @@
 ---
+import type { User } from '@/payload/payload-types';
+
 export interface Props {
 	title: string;
 	body: string;
 	href: string;
+	author?: string | User;
+	date?: string;
 }
 
-const { href, title, body } = Astro.props;
+const { href, title, body, author, date } = Astro.props;
 ---
 
 <li class="link-card">
@@ -16,6 +20,8 @@ const { href, title, body } = Astro.props;
 		</h2>
 		<p>
 			{body}
+			{author.name}
+			{date}
 		</p>
 	</a>
 </li>

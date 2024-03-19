@@ -14,6 +14,8 @@ const posts = data.docs;
         href={`/posts/${post.slug}`}
         title={post.title || "Untitled"}
         body={post.description || "No description"}
+        author={post.author || "Unknown"}
+        date={post.createdAt || "Unknown"}
       />
     ))
   }
