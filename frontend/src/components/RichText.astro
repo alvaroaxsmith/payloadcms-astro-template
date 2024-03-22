@@ -1,6 +1,7 @@
 ---
+import type { FormattedElement, FormattedText } from "@/payload/rich-text-export";
 import escapeHTML from "escape-html";
-import { Text, Node, BaseEditor } from "slate";
+import { Text, Node, type BaseEditor } from "slate";
 
 interface Props {
   richText: Exclude<Node, BaseEditor>[];
@@ -11,61 +12,80 @@ const props = Astro.props;
 
 {
   props.richText.map(
-    (node: {
-      [x: string]: any;
-      text: unknown;
-      type: string;
-      children: any;
-      url: string | null | undefined;
-    }) =>
-      Text.isText(node) ? (
-        <Fragment>
-          {node["bold"] && <strong>{node.text}</strong>}
-          {node["code"] && <code>{node.text}</code>}
-          {node["italic"] && <em>{node.text}</em>}
-          {!node["bold"] && !node["code"] && !node["italic"] && (
-            <Fragment>{node.text}</Fragment>
-          )}
-        </Fragment>
-      ) : (
-        <Fragment>
-          {node.type === "h1" && (
-            <h1>{<Astro.self richText={node.children} />}</h1>
-          )}
-          {node.type === "h2" && (
-            <h2>{<Astro.self richText={node.children} />}</h2>
-          )}
-          {node.type === "h3" && (
-            <h3>{<Astro.self richText={node.children} />}</h3>
-          )}
-          {node.type === "h4" && (
-            <h4>{<Astro.self richText={node.children} />}</h4>
-          )}
-          {node.type === "h5" && (
-            <h5>{<Astro.self richText={node.children} />}</h5>
-          )}
-          {node.type === "h6" && (
-            <h6>{<Astro.self richText={node.children} />}</h6>
-          )}
-          {node.type === "quote" && (
-            <p>{<Astro.self richText={node.children} />}</p>
-          )}
-          {node.type === "ul" && (
-            <ul>{<Astro.self richText={node.children} />}</ul>
-          )}
-          {node.type === "ol" && (
-            <ol>{<Astro.self richText={node.children} />}</ol>
-          )}
-          {node.type === "li" && (
-            <li>{<Astro.self richText={node.children} />}</li>
-          )}
-          {node.type === "link" && (
-            <a href={escapeHTML(node.url)}>
-              {<Astro.self richText={node.children} />}
-            </a>
-          )}
-          {!node.type && <p>{<Astro.self richText={node.children} />}</p>}
-        </Fragment>
-      ),
+    (value: FormattedElement | FormattedText, _index: number, _array: (FormattedElement | FormattedText)[]) => {
+      if (Text.isText(value)) {
+        return (
+          <Fragment>
+            {value["bold"] && <strong>{value.text}</strong>}
+            {value["code"] && <code>{value.text}</code>}
+            {value["italic"] && <em>{value.text}</em>}
+            {!value["bold"] && !value["code"] && !value["italic"] && (
+              <Fragment>{value.text}</Fragment>
+            )}
+          </Fragment>
+        );
+      } else {
+        return (
+          <Fragment>
+            {value.type === "h1" && (
+              <h1>
+                <Astro.self richText={value.children} />
+              </h1>
+            )}
+            {value.type === "h2" && (
+              <h2>
+                <Astro.self richText={value.children} />
+              </h2>
+            )}
+            {value.type === "h3" && (
+              <h3>
+                <Astro.self richText={value.children} />
+              </h3>
+            )}
+            {value.type === "h4" && (
+              <h4>
+                <Astro.self richText={value.children} />
+              </h4>
+            )}
+            {value.type === "h5" && (
+              <h5>
+                <Astro.self richText={value.children} />
+              </h5>
+            )}
+            {value.type === "h6" && (
+              <h6>
+                <Astro.self richText={value.children} />
+              </h6>
+            )}
+            {value.type === "quote" && (
+              <p>
+                <Astro.self richText={value.children} />
+              </p>
+            )}
+            {value.type === "ul" && (
+              <ul>
+                <Astro.self richText={value.children} />
+              </ul>
+            )}
+            {value.type === "ol" && (
+              <ol>
+                <Astro.self richText={value.children} />
+              </ol>
+            )}
+            {value.type === "li" && (
+              <li>
+                <Astro.self richText={value.children} />
+              </li>
+            )}
+            {value.type === "link" && (
+              <a href={escapeHTML(value.url)}>
+                <Astro.self richText={value.children} />
+              </a>
+            )}
+            {!value.type && <p><Astro.self richText={value.children} /></p>}
+          </Fragment>
+        );
+      }
+    }
   )
 }

@@ -20,8 +20,18 @@ const { href, title, body, author, date } = Astro.props;
 		</h2>
 		<p>
 			{body}
+		</p>
+		<p class="author">
 			{author.name}
-			{date}
+		</p>
+		<p class="date">
+			<!-- format date to pt-br complete -->
+			{date && new Date(date).toLocaleDateString('pt-br', {
+				day: 'numeric',
+				month: 'long',
+				year: 'numeric',
+				weekday: 'long'
+			})}
 		</p>
 	</a>
 </li>
